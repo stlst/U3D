@@ -9,12 +9,13 @@ public class CharacterDemoController : MonoBehaviour
 {
 	public int XP;
 	public int level;
-	public bool weapon;
+	//public bool weapon;
 	//	public State state;
 	public bool[] heroList;
-	public int HP;
+	public int HP=100;
+	public int maxHP;
 	public int attackDamage;
-	public int speed;
+//	public int speed;
 	public float minAttackTime = 1.5f;
 	private float timer = 0.0f;	// record attack time duration
 	public float minDist=1f; //	public float attackRange; 
@@ -33,6 +34,10 @@ public class CharacterDemoController : MonoBehaviour
 	public int 			WeaponState=1;
 	Ray ray;
 	RaycastHit hitInfo;
+	GameObject gameObj;
+	int rightmouse = -1;
+	LevelInformation levelInfo = new LevelInformation();
+	int disguisePermit = 0;
 
 	public void Start () 
 	{	
@@ -61,42 +66,102 @@ public class CharacterDemoController : MonoBehaviour
 	public void characterMove(){
 		if (!Input.GetKey (KeyCode.LeftAlt)) {//if we are not using the ALT key(camera control)...
 			if (Input.GetMouseButton (0)) {
+				rightmouse = 0;
 				Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);//从摄像机发出到点击坐标的射线
 				if (Physics.Raycast (ray, out hitInfo)) {				
 					Debug.DrawLine (ray.origin, hitInfo.point);//划出射线，只有在scene视图中才能看到
-					GameObject gameObj = hitInfo.collider.gameObject;
-					Debug.Log ("click object name is " + gameObj.name);
+					gameObj = hitInfo.collider.gameObject;
+					Debug.Log ("left click object name is " + gameObj.name);
 					movementTargetPosition = hitInfo.point;
-
 					minDist = 1f;
-					if (gameObj.tag == "MonsterA") {
-						Debug.Log ("MonsterA");
-						if (WeaponState != 2 && heroList [0] == false)
-							minDist = 3.5f;
-					} else if (gameObj.tag == "MonsterB") {
-						Debug.Log ("MonsterB");
-						if (WeaponState != 4 && heroList [1] == false)
-							minDist = 3.5f;
-					}else if (gameObj.tag == "MonsterC") {
-						Debug.Log ("MonsterC");
-						if (WeaponState != 7 && heroList [2] == false) {
-							minDist = 3.5f;
-							movementTargetPosition = gameObj.transform.position;
-						}
-					}else if (gameObj.tag == "Teddy") {
-						Debug.Log ("Teddy");
-						if (defeatTeddy == false)
-							minDist = 3.5f;
-					}else if (gameObj.tag == "Zombie") {
-						Debug.Log ("Zombie");
-						minDist = 3.5f;
-					}else if (gameObj.tag == "Boss") {
-						Debug.Log ("Boss");
-						minDist = 3.5f;
-					}
-
 				}
 			}
+			if (rightmouse == 0) {
+				if (gameObj.tag == "MonsterA") {
+					Debug.Log ("MonsterA");
+					if (WeaponState != 2 && heroList [0] == false) {
+						minDist = 3f;
+						movementTargetPosition = gameObj.transform.position;
+					}
+				} else if (gameObj.tag == "MonsterB") {
+					Debug.Log ("MonsterB");
+					if (WeaponState != 4 && heroList [1] == false) {
+						minDist = 3f;
+						movementTargetPosition = gameObj.transform.position;
+					}
+				} else if (gameObj.tag == "MonsterC") {
+					Debug.Log ("MonsterC");
+					if (WeaponState != 7 && heroList [2] == false) {
+						minDist = 3f;
+						movementTargetPosition = gameObj.transform.position;
+					}
+				} else if (gameObj.tag == "Teddy") {
+					Debug.Log ("Teddy");
+					if (defeatTeddy == false) {
+						minDist = 3f;
+						movementTargetPosition = gameObj.transform.position;
+					}
+				} else if (gameObj.tag == "Zombie") {
+					Debug.Log ("Zombie");
+					minDist = 3f;
+					movementTargetPosition = gameObj.transform.position;
+				} else if (gameObj.tag == "Boss") {
+					Debug.Log ("Boss");
+					minDist = 3f;
+					movementTargetPosition = gameObj.transform.position;
+				}
+			}
+
+				
+			
+			if (Input.GetMouseButton (1)) {
+				rightmouse = 1;
+				Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);//从摄像机发出到点击坐标的射线
+				if (Physics.Raycast (ray, out hitInfo)) {				
+					Debug.DrawLine (ray.origin, hitInfo.point);//划出射线，只有在scene视图中才能看到
+					gameObj = hitInfo.collider.gameObject;
+					Debug.Log ("right click object name is " + gameObj.name);
+				}
+			}
+			
+			if (rightmouse == 1) {
+				if (gameObj.tag == "MonsterA") {
+					Debug.Log ("MonsterA");
+					if (WeaponState != 2 && heroList [0] == false) {
+						minDist = 3.5f;
+						movementTargetPosition = gameObj.transform.position;
+					}
+				} else if (gameObj.tag == "MonsterB") {
+					Debug.Log ("MonsterB");
+					if (WeaponState != 4 && heroList [1] == false) {
+						minDist = 3.5f;
+						movementTargetPosition = gameObj.transform.position;
+					}
+				} else if (gameObj.tag == "MonsterC") {
+					Debug.Log ("MonsterC");
+					if (WeaponState != 7 && heroList [2] == false) {
+						minDist = 3.5f;
+						movementTargetPosition = gameObj.transform.position;
+					}
+				} else if (gameObj.tag == "Teddy") {
+					Debug.Log ("Teddy");
+					if (defeatTeddy == false) {
+						minDist = 3.5f;
+						movementTargetPosition = gameObj.transform.position;
+					}
+				} else if (gameObj.tag == "Zombie") {
+					Debug.Log ("Zombie");
+					minDist = 3.5f;
+					movementTargetPosition = gameObj.transform.position;
+				} else if (gameObj.tag == "Boss") {
+					Debug.Log ("Boss");
+					minDist = 3.5f;
+					movementTargetPosition = gameObj.transform.position;
+				}
+			}
+
+				
+			
 		}
 			
 		//AttackCode has to go here for targeting reasons
@@ -105,6 +170,7 @@ public class CharacterDemoController : MonoBehaviour
 
 		lookAtPos = transform.position + deltaTarget.normalized*2.0f;
 		lookAtPos.y = transform.position.y;
+
 
 		Quaternion tempRot = transform.rotation; 	//save current rotation
 		transform.LookAt(lookAtPos);						
@@ -123,7 +189,7 @@ public class CharacterDemoController : MonoBehaviour
 			if (minDist == 3.5f && timer > minAttackTime) {
 				timer = 0.0f;
 				attack ();
-				animator.SetTrigger ("Use");//tell mecanim to do the attack animation(trigger)
+
 
 			} else {
 				timer += Time.deltaTime;
@@ -138,42 +204,54 @@ public class CharacterDemoController : MonoBehaviour
 			WeaponState = 1;//1H one handed weapon
 			break;
 		case "1":
-			WeaponState = 2;//2H two handed weapon(longsword or heavy axe)
+			if(disguisePermit == 1 || heroList[0] == true)
+				WeaponState = 2;//2H two handed weapon(longsword or heavy axe)
 			break;
 		case "2":
-			WeaponState = 4;//dual weild(short swords, light axes)
+			if(disguisePermit == 2 || heroList[1] == true)
+				WeaponState = 4;//dual weild(short swords, light axes)
 			break;
 		case "3":
-			WeaponState = 7;//spear
+			if(disguisePermit == 3 || heroList[2] == true)
+				WeaponState = 7;//spear
 			break;		
 		default:
 			break;
 		}
-
+		changeState ();
 		animator.SetInteger("WeaponState", WeaponState);// probably would be better to check for change rather than bashing the value in like this
 	}
 
 	public void attack(){
-		GameObject gameObj = hitInfo.collider.gameObject;
+		gameObj = hitInfo.collider.gameObject;
 		if (gameObj.tag == "MonsterA") {
 			Debug.Log ("Attack MonsterA");
 			MonsterAHealth monsterAHealth = gameObj.GetComponent<MonsterAHealth> ();
-			if (monsterAHealth != null) {
+			if (monsterAHealth != null && monsterAHealth.health > 0) {
+				animator.SetTrigger ("Use");//tell mecanim to do the attack animation(trigger)
 				monsterAHealth.TakeDamage (attackDamage);
+			} else if (monsterAHealth.health <= 0) {
+				disguisePermit = 1;
 			}
 		} 
 		else if (gameObj.tag == "MonsterB") {
 			Debug.Log ("Attack MonsterB");
 			MonsterBHealth monsterBHealth = gameObj.GetComponent<MonsterBHealth> ();
-			if (monsterBHealth != null) {
+			if (monsterBHealth != null  && monsterBHealth.health>0 ) {
+				animator.SetTrigger ("Use");
 				monsterBHealth.TakeDamage (attackDamage);
+			} else if (monsterBHealth.health <= 0) {
+				disguisePermit = 2;
 			}
 		}else if (gameObj.tag == "MonsterC") {
 			Debug.Log ("Attack MonsterC");
 			MonsterCHealth monsterCHealth = gameObj.GetComponent<MonsterCHealth> ();
-			if (monsterCHealth != null) {
+			if (monsterCHealth != null  && monsterCHealth.health>0 ) {
+				animator.SetTrigger ("Use");
 				monsterCHealth.TakeDamage (attackDamage);
-			} 
+			} else if (monsterCHealth.health <= 0) {
+				disguisePermit = 3;
+			}
 		}
 	/*	else if (gameObj.tag == "Teddy") {
 			Debug.Log ("Attack Teddy");
@@ -185,13 +263,15 @@ public class CharacterDemoController : MonoBehaviour
 		else if (gameObj.tag == "Zombie") {
 			Debug.Log ("Attack Zombie");
 			ZombieHealth zombieHealth = gameObj.GetComponent<ZombieHealth> ();
-			if (zombieHealth != null) {
+			if (zombieHealth != null  && zombieHealth.health>0) {
+				animator.SetTrigger ("Use");
 				zombieHealth.TakeDamage (attackDamage);
 			}
 		}else if (gameObj.tag == "Boss") {
 			Debug.Log ("Attack Boss");
 			BossHealth bossHealth = gameObj.GetComponent<BossHealth> ();
-			if (bossHealth != null) {
+			if (bossHealth != null  && bossHealth.health>0 ) {
+				animator.SetTrigger ("Use");
 				bossHealth.TakeDamage (attackDamage);
 			}
 		} 
@@ -220,13 +300,46 @@ public class CharacterDemoController : MonoBehaviour
 	}
 	public void addXP(int bonusXP){
 		XP += bonusXP;
+		levelUp ();
 	}
 
 	public void levelUp(){
-
+		if (XP < levelInfo.XP [0]) {
+			level = 0;
+		} else if (XP >= levelInfo.XP [0] && XP < levelInfo.XP [1]) {
+			level = 1;
+		} else if (XP >= levelInfo.XP [1] && XP < levelInfo.XP [2]) {
+			level = 2;
+		} else if (XP >= levelInfo.XP [2] && XP < levelInfo.XP [3]) {
+			level = 3;
+		} else if (XP >= levelInfo.XP [3] && XP < levelInfo.XP [4]) {
+			level = 4;
+		}
+		maxHP = levelInfo.HP [level];
+		attackDamage = levelInfo.attackDamage [level];	
 	}
 
 	public void changeState(){
-
+		if (WeaponState == 1) {
+			maxHP = levelInfo.HP [level];
+			attackDamage = levelInfo.attackDamage [level];	
+			if (HP > maxHP)
+				HP = maxHP;
+		} else if (WeaponState == 2) {
+			maxHP = levelInfo.HP [level] + 20;
+			attackDamage = levelInfo.attackDamage [level] + 1;
+			if (HP > maxHP)
+				HP = maxHP;
+		} else if (WeaponState == 4) {
+			maxHP = levelInfo.HP [level];
+			attackDamage = levelInfo.attackDamage [level] + 1;
+			if (HP > maxHP)
+				HP = maxHP;
+		} else if (WeaponState == 7) {
+			maxHP = levelInfo.HP [level];
+			attackDamage = levelInfo.attackDamage [level] + 3;
+			if (HP > maxHP)
+				HP = maxHP;
+		}
 	}
 }
