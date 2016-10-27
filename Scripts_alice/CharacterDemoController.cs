@@ -12,6 +12,9 @@ public class CharacterDemoController : MonoBehaviour
 	//public bool weapon;
 	//	public State state;
 	public bool[] heroList;
+	public int[] levelXP;
+	public int[] levelHP;
+	public int[] levelDamage;
 	public int HP=100;
 	public int maxHP;
 	public int attackDamage;
@@ -36,11 +39,14 @@ public class CharacterDemoController : MonoBehaviour
 	RaycastHit hitInfo;
 	GameObject gameObj;
 	int rightmouse = -1;
-	LevelInformation levelInfo = new LevelInformation();
 	int disguisePermit = 0;
+
 
 	public void Start () 
 	{	
+		levelXP = new int[]{100,300,900,2700,99999999 };
+		levelHP = new int[]{100,105,110,115,120};
+		levelDamage = new int[]{8,9,10,11,12 };
 		heroList = new bool[3]{ false, false, false };
 		animator = GetComponentInChildren<Animator>();//need this...
 		movementTargetPosition = transform.position;//initializing our movement target as our current position
@@ -304,40 +310,40 @@ public class CharacterDemoController : MonoBehaviour
 	}
 
 	public void levelUp(){
-		if (XP < levelInfo.XP [0]) {
+		if (XP < levelXP [0]) {
 			level = 0;
-		} else if (XP >= levelInfo.XP [0] && XP < levelInfo.XP [1]) {
+		} else if (XP >= levelXP [0] && XP < levelXP [1]) {
 			level = 1;
-		} else if (XP >= levelInfo.XP [1] && XP < levelInfo.XP [2]) {
+		} else if (XP >= levelXP [1] && XP < levelXP [2]) {
 			level = 2;
-		} else if (XP >= levelInfo.XP [2] && XP < levelInfo.XP [3]) {
+		} else if (XP >= levelXP [2] && XP < levelXP [3]) {
 			level = 3;
-		} else if (XP >= levelInfo.XP [3] && XP < levelInfo.XP [4]) {
+		} else if (XP >= levelXP [3] && XP < levelXP [4]) {
 			level = 4;
 		}
-		maxHP = levelInfo.HP [level];
-		attackDamage = levelInfo.attackDamage [level];	
+		maxHP = levelHP [level];
+		attackDamage = levelDamage [level];	
 	}
 
 	public void changeState(){
 		if (WeaponState == 1) {
-			maxHP = levelInfo.HP [level];
-			attackDamage = levelInfo.attackDamage [level];	
+			maxHP = levelHP [level];
+			attackDamage = levelDamage [level];	
 			if (HP > maxHP)
 				HP = maxHP;
 		} else if (WeaponState == 2) {
-			maxHP = levelInfo.HP [level] + 20;
-			attackDamage = levelInfo.attackDamage [level] + 1;
+			maxHP = levelHP [level] + 20;
+			attackDamage = levelDamage [level] + 1;
 			if (HP > maxHP)
 				HP = maxHP;
 		} else if (WeaponState == 4) {
-			maxHP = levelInfo.HP [level];
-			attackDamage = levelInfo.attackDamage [level] + 1;
+			maxHP = levelHP [level];
+			attackDamage = levelDamage [level] + 1;
 			if (HP > maxHP)
 				HP = maxHP;
 		} else if (WeaponState == 7) {
-			maxHP = levelInfo.HP [level];
-			attackDamage = levelInfo.attackDamage [level] + 3;
+			maxHP = levelHP [level];
+			attackDamage = levelDamage [level] + 3;
 			if (HP > maxHP)
 				HP = maxHP;
 		}
