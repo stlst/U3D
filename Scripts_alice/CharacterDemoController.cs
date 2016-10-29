@@ -48,8 +48,20 @@ public class CharacterDemoController : MonoBehaviour
 	int rightmouse = -1;
 	int disguisePermit = 0;
 	public bool isFight = false;
-	public bool isDrug = false;
+	public bool isObject = false;
 
+	public bool getTaskA = false;
+	public bool getTaskB = false;
+	public bool getTaskC = false;
+	public bool finishTaskA = false;
+	public bool finishTaskB = false;
+	public bool finishTaskC = false;
+	public int num_killZobiem = 0;
+	public int num_killMonsterC = 0;
+	public bool getTreasureC = false;
+	public bool guarderA = false;
+	public bool guarderB = false;
+	public bool guarderC = false;
 
 	public void Start () 
 	{	
@@ -124,7 +136,7 @@ public class CharacterDemoController : MonoBehaviour
 					movementTargetPosition = gameObj.transform.position;
 				}
 			}
-
+ 
 				
 			
 			if (Input.GetMouseButton (1)) {
@@ -135,7 +147,7 @@ public class CharacterDemoController : MonoBehaviour
 					gameObj = hitInfo.collider.gameObject;
 					Debug.Log ("right click object name is " + gameObj.name);
 					isFight = false;
-					isDrug = false;
+					isObject = false;
 				}
 			}
 			
@@ -144,7 +156,7 @@ public class CharacterDemoController : MonoBehaviour
 					Debug.Log ("Attack MonsterA");
 					if (WeaponState != 2 && heroList [0] == false) {
 						isFight = true;
-						isDrug = false;
+						isObject = false;
 						minDist = 3.5f;
 						movementTargetPosition = gameObj.transform.position;
 					}
@@ -152,7 +164,7 @@ public class CharacterDemoController : MonoBehaviour
 					Debug.Log ("MonsterB");
 					if (WeaponState != 4 && heroList [1] == false) {
 						isFight = true;
-						isDrug = false;
+						isObject = false;
 						minDist = 3.5f;
 						movementTargetPosition = gameObj.transform.position;
 					}
@@ -160,40 +172,69 @@ public class CharacterDemoController : MonoBehaviour
 					Debug.Log ("MonsterC");
 					if (WeaponState != 7 && heroList [2] == false) {
 						isFight = true;
-						isDrug = false;
+						isObject = false;
 						minDist = 3.5f;
 						movementTargetPosition = gameObj.transform.position;
 					}
 				}  else if (gameObj.tag == "Zombie") {
 					Debug.Log ("Zombie");
 					isFight = true;
-					isDrug = false;
+					isObject = false;
 					minDist = 3.5f;
 					movementTargetPosition = gameObj.transform.position;
 				} else if (gameObj.tag == "Boss") {
 					Debug.Log ("Boss");
 					isFight = true;
-					isDrug = false;
+					isObject = false;
 					minDist = 3.5f;
 					movementTargetPosition = gameObj.transform.position;
 				} else if (gameObj.tag == "Drug") {
 					Debug.Log ("Drug");
 					isFight = false;
-					isDrug = true;
+					isObject = true;
 					minDist = 2f;
 					movementTargetPosition = gameObj.transform.position;
 					treasureBox = gameObj.GetComponent<TreasureBox> ();
 
-				}
-			}
+				} else if (gameObj.tag == "TotemA") {
+					Debug.Log ("TomtemA");
+					isFight = false;
+					isObject = true;
+					minDist = 2f;
+					movementTargetPosition = gameObj.transform.position;
+					treasureBox = gameObj.GetComponent<TreasureBox> ();
 
-				
-			
+				} else if (gameObj.tag == "TotemB") {
+					Debug.Log ("TotemB");
+					isFight = false;
+					isObject = true;
+					minDist = 2f;
+					movementTargetPosition = gameObj.transform.position;
+					treasureBox = gameObj.GetComponent<TreasureBox> ();
+
+				} else if (gameObj.tag == "TotemC") {
+					Debug.Log ("TotemC");
+					isFight = false;
+					isObject = true;
+					minDist = 2f;
+					movementTargetPosition = gameObj.transform.position;
+					treasureBox = gameObj.GetComponent<TreasureBox> ();
+
+				} else if (gameObj.tag == "TreasureC") {
+					Debug.Log ("TreasureC");
+					isFight = false;
+					isObject = true;
+					minDist = 2f;
+					movementTargetPosition = gameObj.transform.position;
+					treasureBox = gameObj.GetComponent<TreasureBox> ();
+
+				} 
+			}
 		}
 			
 		//AttackCode has to go here for targeting reasons
 		//		Vector3 deltaTarget = movementTargetPosition - transform.position;
-		if(isFight == false && rightmouse == 1 && isDrug == false){  //stop attack
+		if(isFight == false && rightmouse == 1 && isObject == false){  //stop attack
 			movementTargetPosition = transform.position;
 		}
 		deltaTarget = movementTargetPosition - transform.position;
@@ -220,21 +261,59 @@ public class CharacterDemoController : MonoBehaviour
 				timer = 0.0f; 
 				attack ();
 
-			} else if (minDist == 2f && isDrug == true) {
-				if (treasureBox.count_treasure () == 1) {
-					treasureBox.box_behaviour ();   // guarantee this function is excuted only one time.
+			} else if (minDist == 2f && isObject == true) {
+				if (gameObj.tag == "Drug") {
+					if (treasureBox.count_treasure () == 1) {
+						treasureBox.box_behaviour ();   // guarantee this function is excuted only one time.
+					}
+					if (!treasureBox.isEmpty ()) {
+						treasureBox.distribution ();
+						System.Random rd = new System.Random ();
+						int randKey = rd.Next (1, 100);
+						if (0 < randKey && randKey <= 80)
+							drug_num [0]++;
+						else if (80 < randKey && randKey <= 90)
+							drug_num [1]++;
+						else
+							drug_num [2]++;
+					}
+				} else if (gameObj.tag == "TotemA") {
+					if (getTaskA == false) {
+						getTaskA = true;
+					} else if (getTaskA == true && finishTaskA == false) {
+						if (num_killZobiem == 5) {
+							finishTaskA = true;
+							heroList [0] = true;
+						}
+					} else if (finishTaskA == true && guarderA == false) {
+						createGuarderA ();
+					}
+				} else if (gameObj.tag == "TotemB") {
+					if (getTaskB == false) {
+						getTaskB = true;
+					} else if (getTaskB == true && finishTaskB == false) {
+						if (num_killMonsterC == 3) {
+							finishTaskB = true;
+							heroList [1] = true;
+						}
+					} else if (finishTaskB == true && guarderB == false) {
+						createGuarderB ();
+					}
+				} else if (gameObj.tag == "TotemC") {
+					if (getTaskC == false) {
+						getTaskC = true;
+					} else if (getTaskC == true && finishTaskC == false) {
+						if (getTreasureC == true) {
+							finishTaskC = true;
+							heroList [2] = true;
+						}
+					} else if (finishTaskC == true && guarderC == false) {
+						createGuarderC ();
+					}
+				} else if (gameObj.tag == "TreasureC") {
+					getTreasureC = true;
 				}
-				if (!treasureBox.isEmpty ()) {
-					treasureBox.distribution ();
-					System.Random rd = new System.Random ();
-					int randKey = rd.Next (1, 100);
-					if (0 < randKey && randKey <= 80)
-						drug_num [0]++;
-					else if (80 < randKey && randKey <= 90)
-						drug_num [1]++;
-					else
-						drug_num [2]++;
-				}
+
 				timer += Time.deltaTime;
 			} else {
 				timer += Time.deltaTime;
@@ -470,6 +549,19 @@ public class CharacterDemoController : MonoBehaviour
 		}
 //		maxHP = levelHP [level];
 //		attackDamage = levelDamage [level];	
+	}
+
+	void createGuarderA(){
+		guarderA = true;
+		//create monsterA as guarder
+	}
+	void createGuarderB(){
+		guarderB = true;
+		//create monsterB as guarder
+	}
+	void createGuarderC(){
+		guarderC = true;
+		//create monsterC as guarder
 	}
 
 /*	public void changeState(){
