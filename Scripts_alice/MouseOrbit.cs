@@ -13,12 +13,12 @@ public class MouseOrbit : MonoBehaviour
 	
 	void Start () 
 	{
-	//	Vector3 angles = transform.eulerAngles;
-	//	x = angles.y;
-	//	y = angles.x;
-		x = 35f;
-		y = -38f;
-		transform.rotation = Quaternion.Euler( x, y, 0.0f);
+		Vector3 angles = transform.eulerAngles;
+		x = angles.y;
+		y = angles.x;
+		x = -38f;
+		y = 34f;
+		transform.rotation = Quaternion.Euler( y, x, 0.0f);
 
 		// Make the rigid body not change rotation
    		if (GetComponent<Rigidbody>())
@@ -69,6 +69,8 @@ public class MouseOrbit : MonoBehaviour
 			angle -= 360;
 		return angle;
 	}
+
+
 	
 /*void OnGUI()
 	{

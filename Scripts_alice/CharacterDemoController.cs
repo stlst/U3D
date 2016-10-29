@@ -12,6 +12,7 @@ public class CharacterDemoController : MonoBehaviour
 	//public bool weapon;
 	//	public State state;
 	public bool[] heroList;
+	public bool isLevelUp=false;
 	public int[] levelXP;
 	public int[] levelHP;
 	public int[] levelDamage;
@@ -46,7 +47,7 @@ public class CharacterDemoController : MonoBehaviour
 	RaycastHit hitInfo;
 	GameObject gameObj;
 	int rightmouse = -1;
-	int disguisePermit = 0;
+	public int disguisePermit = 0;
 	public bool isFight = false;
 	public bool isObject = false;
 
@@ -151,7 +152,7 @@ public class CharacterDemoController : MonoBehaviour
 				}
 			}
 			
-			if (rightmouse == 1) {
+			if (rightmouse == 1 && gameObj!=null) {
 				if (gameObj.tag == "MonsterA") {
 					Debug.Log ("Attack MonsterA");
 					if (WeaponState != 2 && heroList [0] == false) {
@@ -202,7 +203,7 @@ public class CharacterDemoController : MonoBehaviour
 					isObject = true;
 					minDist = 2f;
 					movementTargetPosition = gameObj.transform.position;
-					treasureBox = gameObj.GetComponent<TreasureBox> ();
+	
 
 				} else if (gameObj.tag == "TotemB") {
 					Debug.Log ("TotemB");
@@ -210,7 +211,6 @@ public class CharacterDemoController : MonoBehaviour
 					isObject = true;
 					minDist = 2f;
 					movementTargetPosition = gameObj.transform.position;
-					treasureBox = gameObj.GetComponent<TreasureBox> ();
 
 				} else if (gameObj.tag == "TotemC") {
 					Debug.Log ("TotemC");
@@ -218,7 +218,7 @@ public class CharacterDemoController : MonoBehaviour
 					isObject = true;
 					minDist = 2f;
 					movementTargetPosition = gameObj.transform.position;
-					treasureBox = gameObj.GetComponent<TreasureBox> ();
+			
 
 				} else if (gameObj.tag == "TreasureC") {
 					Debug.Log ("TreasureC");
@@ -226,7 +226,7 @@ public class CharacterDemoController : MonoBehaviour
 					isObject = true;
 					minDist = 2f;
 					movementTargetPosition = gameObj.transform.position;
-					treasureBox = gameObj.GetComponent<TreasureBox> ();
+				
 
 				} 
 			}
@@ -257,11 +257,11 @@ public class CharacterDemoController : MonoBehaviour
 		{
 			animator.SetBool("Idling", true);
 
-			if (minDist == 3.5f && timer > minAttackTime && isFight == true) {
+			if (minDist == 3.5f && timer > minAttackTime && isFight == true &&gameObj!=null) {
 				timer = 0.0f; 
 				attack ();
 
-			} else if (minDist == 2f && isObject == true) {
+			} else if (minDist == 2f && isObject == true &&gameObj!=null) {
 				if (gameObj.tag == "Drug") {
 					if (treasureBox.count_treasure () == 1) {
 						treasureBox.box_behaviour ();   // guarantee this function is excuted only one time.
@@ -281,7 +281,7 @@ public class CharacterDemoController : MonoBehaviour
 					if (getTaskA == false) {
 						getTaskA = true;
 					} else if (getTaskA == true && finishTaskA == false) {
-						if (num_killZobiem == 5) {
+						if (num_killZobiem >= 5) {
 							finishTaskA = true;
 							heroList [0] = true;
 						}
@@ -292,7 +292,7 @@ public class CharacterDemoController : MonoBehaviour
 					if (getTaskB == false) {
 						getTaskB = true;
 					} else if (getTaskB == true && finishTaskB == false) {
-						if (num_killMonsterC == 3) {
+						if (num_killMonsterC >= 3) {
 							finishTaskB = true;
 							heroList [1] = true;
 						}
@@ -446,38 +446,38 @@ public class CharacterDemoController : MonoBehaviour
 	}
 
 	public void attack(){
-		if (HP <= 0)
-			return;
-		gameObj = hitInfo.collider.gameObject;
-		if (gameObj.tag == "MonsterA") {
-	//		Debug.Log ("Attack MonsterA");
-			MonsterAHealth monsterAHealth = gameObj.GetComponent<MonsterAHealth> ();
-			if (monsterAHealth != null && monsterAHealth.health > 0) {
-				animator.SetTrigger ("Use");//tell mecanim to do the attack animation(trigger)
-				monsterAHealth.TakeDamage (attackDamage);
-			} else if (monsterAHealth.health <= 0) {
-				disguisePermit = 1;
+//		if (gameObj != null) {
+			if (HP <= 0)
+				return;
+			gameObj = hitInfo.collider.gameObject;
+			if (gameObj.tag == "MonsterA") {
+				//		Debug.Log ("Attack MonsterA");
+				MonsterAHealth monsterAHealth = gameObj.GetComponent<MonsterAHealth> ();
+				if (monsterAHealth != null && monsterAHealth.health > 0) {
+					animator.SetTrigger ("Use");//tell mecanim to do the attack animation(trigger)
+					monsterAHealth.TakeDamage (attackDamage);
+				} else if (monsterAHealth.health <= 0) {
+					disguisePermit = 1;
+				}
+			} else if (gameObj.tag == "MonsterB") {
+				Debug.Log ("Attack MonsterB");
+				MonsterBHealth monsterBHealth = gameObj.GetComponent<MonsterBHealth> ();
+				if (monsterBHealth != null && monsterBHealth.health > 0) {
+					animator.SetTrigger ("Use");
+					monsterBHealth.TakeDamage (attackDamage);
+				} else if (monsterBHealth.health <= 0) {
+					disguisePermit = 2;
+				}
+			} else if (gameObj.tag == "MonsterC") {
+				Debug.Log ("Attack MonsterC");
+				MonsterCHealth monsterCHealth = gameObj.GetComponent<MonsterCHealth> ();
+				if (monsterCHealth != null && monsterCHealth.health > 0) {
+					animator.SetTrigger ("Use");
+					monsterCHealth.TakeDamage (attackDamage);
+				} else if (monsterCHealth.health <= 0) {
+					disguisePermit = 3;
+				}
 			}
-		} 
-		else if (gameObj.tag == "MonsterB") {
-			Debug.Log ("Attack MonsterB");
-			MonsterBHealth monsterBHealth = gameObj.GetComponent<MonsterBHealth> ();
-			if (monsterBHealth != null  && monsterBHealth.health>0 ) {
-				animator.SetTrigger ("Use");
-				monsterBHealth.TakeDamage (attackDamage);
-			} else if (monsterBHealth.health <= 0) {
-				disguisePermit = 2;
-			}
-		}else if (gameObj.tag == "MonsterC") {
-			Debug.Log ("Attack MonsterC");
-			MonsterCHealth monsterCHealth = gameObj.GetComponent<MonsterCHealth> ();
-			if (monsterCHealth != null  && monsterCHealth.health>0 ) {
-				animator.SetTrigger ("Use");
-				monsterCHealth.TakeDamage (attackDamage);
-			} else if (monsterCHealth.health <= 0) {
-				disguisePermit = 3;
-			}
-		}
 	/*	else if (gameObj.tag == "Teddy") {
 			Debug.Log ("Attack Teddy");
 			TeddyHealth teddyHealth = gameObj.GetComponent<TeddyHealth> ();
@@ -486,20 +486,21 @@ public class CharacterDemoController : MonoBehaviour
 			}
 		}*/
 		else if (gameObj.tag == "Zombie") {
-			Debug.Log ("Attack Zombie");
-			ZombieHealth zombieHealth = gameObj.GetComponent<ZombieHealth> ();
-			if (zombieHealth != null  && zombieHealth.health>0) {
-				animator.SetTrigger ("Use");
-				zombieHealth.TakeDamage (attackDamage);
-			}
-		}else if (gameObj.tag == "Boss") {
-			Debug.Log ("Attack Boss");
-			BossHealth bossHealth = gameObj.GetComponent<BossHealth> ();
-			if (bossHealth != null  && bossHealth.health>0 ) {
-				animator.SetTrigger ("Use");
-				bossHealth.TakeDamage (attackDamage);
-			}
-		} 
+				Debug.Log ("Attack Zombie");
+				ZombieHealth zombieHealth = gameObj.GetComponent<ZombieHealth> ();
+				if (zombieHealth != null && zombieHealth.health > 0) {
+					animator.SetTrigger ("Use");
+					zombieHealth.TakeDamage (attackDamage);
+				}
+			} else if (gameObj.tag == "Boss") {
+				Debug.Log ("Attack Boss");
+				BossHealth bossHealth = gameObj.GetComponent<BossHealth> ();
+				if (bossHealth != null && bossHealth.health > 0) {
+					animator.SetTrigger ("Use");
+					bossHealth.TakeDamage (attackDamage);
+				}
+			} 
+	//	}
 	}
 
 	public bool isDead(){
@@ -534,8 +535,11 @@ public class CharacterDemoController : MonoBehaviour
 		XP += bonusXP;
 		levelUp ();
 	}
-
+	public void setIsLevelUp(bool setLevelUp){
+		isLevelUp = setLevelUp;
+	}
 	public void levelUp(){
+		int oldLevel = level;
 		if (XP < levelXP [0]) {
 			level = 0;
 		} else if (XP >= levelXP [0] && XP < levelXP [1]) {
@@ -546,6 +550,10 @@ public class CharacterDemoController : MonoBehaviour
 			level = 3;
 		} else if (XP >= levelXP [3] && XP < levelXP [4]) {
 			level = 4;
+		}
+		if (oldLevel < level) {
+			isLevelUp = true;
+			HP = maxHP;
 		}
 //		maxHP = levelHP [level];
 //		attackDamage = levelDamage [level];	
