@@ -35,6 +35,9 @@ public class ZombieHealth : MonoBehaviour {
 		if (health <= 0) {			//当敌人生命值小于等于0时，表明敌人已死亡
 			if (GameManager.gameManager != null) {	
 				GameManager.gameManager.player.addXP (value);//玩家获得击杀敌人后得分
+				if(GameManager.gameManager.player.getTaskA == true){
+					GameManager.gameManager.player.num_killZobiem++;
+				}
 			}
 			animator.applyRootMotion = true;	//设置Animator组件的ApplyRootMotion属性，使敌人的移动与位移受动画的影响
 			animator.SetTrigger ("isDead");		//设置动画参数，设置isDead的Trigger参数，播放敌人死亡动画

@@ -4,7 +4,7 @@ using System.Collections;
 public class MonsterCHealth : MonoBehaviour {
 
 	public int health=2;	//敌人的生命值
-	public int value=1;		//玩家击杀敌人后所获得的分数
+	public int XP=1;		//玩家击杀敌人后所获得的分数
 	public AudioClip enemyHurtAudio;	//敌人的受伤音效
 
 	private Animator animator;			//敌人的Animator组件
@@ -35,7 +35,12 @@ public class MonsterCHealth : MonoBehaviour {
 
 		if (health <= 0) {			//当敌人生命值小于等于0时，表明敌人已死亡
 			if (GameManager.gameManager != null) {	
-				GameManager.gameManager.player.addXP (value);//玩家获得击杀敌人后得分
+				GameManager.gameManager.player.addXP (XP);//玩家获得击杀敌人后得分
+				if (GameManager.gameManager.player.getTaskB == true) {
+					
+					GameManager.gameManager.player.num_killMonsterC ++;
+					Debug.Log ("killMonsterC: " + GameManager.gameManager.player.num_killMonsterC);
+				}
 			}
 			animator.applyRootMotion = true;	//设置Animator组件的ApplyRootMotion属性，使敌人的移动与位移受动画的影响
 			animator.SetTrigger ("isDead");		//设置动画参数，设置isDead的Trigger参数，播放敌人死亡动画
