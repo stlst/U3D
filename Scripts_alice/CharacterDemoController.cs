@@ -32,7 +32,7 @@ public class CharacterDemoController : MonoBehaviour
 	private Animator animator;
 	private Collider collider;			
 	private Rigidbody rigidbody;	
-	private bool defeatTeddy = false;
+//	private bool defeatTeddy = false;
 	public AudioClip playerHurtAudio;	
 	public AudioClip playerAttackAudio;
 	float				rotateSpeed = 20.0f; //used to smooth out turning
@@ -47,6 +47,8 @@ public class CharacterDemoController : MonoBehaviour
 	GameObject gameObj;
 	int rightmouse = -1;
 	int disguisePermit = 0;
+	public bool isFight = false;
+	public bool isDrug = false;
 
 
 	public void Start () 
@@ -112,13 +114,7 @@ public class CharacterDemoController : MonoBehaviour
 						minDist = 3f;
 						movementTargetPosition = gameObj.transform.position;
 					}
-				} else if (gameObj.tag == "Teddy") {
-					Debug.Log ("Teddy");
-					if (defeatTeddy == false) {
-						minDist = 3f;
-						movementTargetPosition = gameObj.transform.position;
-					}
-				} else if (gameObj.tag == "Zombie") {
+				}  else if (gameObj.tag == "Zombie") {
 					Debug.Log ("Zombie");
 					minDist = 3f;
 					movementTargetPosition = gameObj.transform.position;
@@ -138,6 +134,8 @@ public class CharacterDemoController : MonoBehaviour
 					Debug.DrawLine (ray.origin, hitInfo.point);//划出射线，只有在scene视图中才能看到
 					gameObj = hitInfo.collider.gameObject;
 					Debug.Log ("right click object name is " + gameObj.name);
+					isFight = false;
+					isDrug = false;
 				}
 			}
 			
@@ -145,41 +143,47 @@ public class CharacterDemoController : MonoBehaviour
 				if (gameObj.tag == "MonsterA") {
 					Debug.Log ("Attack MonsterA");
 					if (WeaponState != 2 && heroList [0] == false) {
+						isFight = true;
+						isDrug = false;
 						minDist = 3.5f;
 						movementTargetPosition = gameObj.transform.position;
 					}
 				} else if (gameObj.tag == "MonsterB") {
 					Debug.Log ("MonsterB");
 					if (WeaponState != 4 && heroList [1] == false) {
+						isFight = true;
+						isDrug = false;
 						minDist = 3.5f;
 						movementTargetPosition = gameObj.transform.position;
 					}
 				} else if (gameObj.tag == "MonsterC") {
 					Debug.Log ("MonsterC");
 					if (WeaponState != 7 && heroList [2] == false) {
+						isFight = true;
+						isDrug = false;
 						minDist = 3.5f;
 						movementTargetPosition = gameObj.transform.position;
 					}
-				} else if (gameObj.tag == "Teddy") {
-					Debug.Log ("Teddy");
-					if (defeatTeddy == false) {
-						minDist = 3.5f;
-						movementTargetPosition = gameObj.transform.position;
-					}
-				} else if (gameObj.tag == "Zombie") {
+				}  else if (gameObj.tag == "Zombie") {
 					Debug.Log ("Zombie");
+					isFight = true;
+					isDrug = false;
 					minDist = 3.5f;
 					movementTargetPosition = gameObj.transform.position;
 				} else if (gameObj.tag == "Boss") {
 					Debug.Log ("Boss");
+					isFight = true;
+					isDrug = false;
 					minDist = 3.5f;
 					movementTargetPosition = gameObj.transform.position;
 				} else if (gameObj.tag == "Drug") {
 					Debug.Log ("Drug");
+					isFight = false;
+					isDrug = true;
 					minDist = 2f;
 					movementTargetPosition = gameObj.transform.position;
 					treasureBox = gameObj.GetComponent<TreasureBox> ();
-					treasureBox.box_behaviour ();
+
 				}
 			}
 
@@ -189,6 +193,9 @@ public class CharacterDemoController : MonoBehaviour
 			
 		//AttackCode has to go here for targeting reasons
 		//		Vector3 deltaTarget = movementTargetPosition - transform.position;
+		if(isFight == false && rightmouse == 1 && isDrug == false){  //stop attack
+			movementTargetPosition = transform.position;
+		}
 		deltaTarget = movementTargetPosition - transform.position;
 
 		lookAtPos = transform.position + deltaTarget.normalized*2.0f;
@@ -209,11 +216,14 @@ public class CharacterDemoController : MonoBehaviour
 		{
 			animator.SetBool("Idling", true);
 
-			if (minDist == 3.5f && timer > minAttackTime) {
-				timer = 0.0f;
+			if (minDist == 3.5f && timer > minAttackTime && isFight == true) {
+				timer = 0.0f; 
 				attack ();
 
-			} else if (minDist == 2f) {
+			} else if (minDist == 2f && isDrug == true) {
+				if (treasureBox.count_treasure () == 1) {
+					treasureBox.box_behaviour ();   // guarantee this function is excuted only one time.
+				}
 				if (!treasureBox.isEmpty ()) {
 					treasureBox.distribution ();
 					System.Random rd = new System.Random ();
