@@ -25,7 +25,9 @@ public class TreasureBox : MonoBehaviour {
 	void Update () {
 
 	}
-
+	public int count_treasure(){
+		return treasure_num;
+	}
 	public void distribution(){
 		treasure_num--;
 		if (treasure_num < 0)
