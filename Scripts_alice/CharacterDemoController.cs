@@ -109,7 +109,9 @@ public class CharacterDemoController : MonoBehaviour
 				}
 			}
 			if (rightmouse == 0) {
-				if (gameObj.tag == "MonsterA") {
+				if (gameObj.tag == "Player") {				
+						movementTargetPosition = gameObj.transform.position;
+				} else if (gameObj.tag == "MonsterA") {
 	//				Debug.Log ("MonsterA");
 					if (WeaponState != 2 && heroList [0] == false) {
 						minDist = 3f;
