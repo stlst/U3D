@@ -280,9 +280,9 @@ public class CharacterDemoController : MonoBehaviour
 							drug_num [2]++;
 					}
 				} else if (gameObj.tag == "TotemA") {
-					if (getTaskA == false) {
+					if (getTaskA == false && WeaponState == 2) {
 						getTaskA = true;
-					} else if (getTaskA == true && finishTaskA == false) {
+					} else if (getTaskA == true && finishTaskA == false && WeaponState == 2) {
 						if (num_killZobiem >= 5) {
 							finishTaskA = true;
 							heroList [0] = true;
@@ -291,9 +291,9 @@ public class CharacterDemoController : MonoBehaviour
 						createGuarderA ();
 					}
 				} else if (gameObj.tag == "TotemB") {
-					if (getTaskB == false) {
+					if (getTaskB == false && WeaponState == 4 ) {
 						getTaskB = true;
-					} else if (getTaskB == true && finishTaskB == false) {
+					} else if (getTaskB == true && finishTaskB == false && WeaponState == 4 ) {
 						if (num_killMonsterC >= 3) {
 							finishTaskB = true;
 							heroList [1] = true;
@@ -302,9 +302,9 @@ public class CharacterDemoController : MonoBehaviour
 						createGuarderB ();
 					}
 				} else if (gameObj.tag == "TotemC") {
-					if (getTaskC == false) {
+					if (getTaskC == false && WeaponState == 7 ) {
 						getTaskC = true;
-					} else if (getTaskC == true && finishTaskC == false) {
+					} else if (getTaskC == true && finishTaskC == false && WeaponState == 7 ) {
 						if (getTreasureC == true) {
 							finishTaskC = true;
 							heroList [2] = true;
