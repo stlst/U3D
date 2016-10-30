@@ -27,7 +27,8 @@ public class MonsterBAttack : MonoBehaviour {
 			//当游戏状态为游戏进行中（Playing）时
 			if(GameManager.gameManager==null || GameManager.gameManager.gameState==GameManager.GameState.Playing){
 				timer=0.0f;			//攻击后将攻击时间间隔清零
-				animator.SetBool("attack", true);
+				animator.SetTrigger("attack");
+
 				animator.SetBool ("isWalk", false);
 
 				if(enemyAttackAudio!=null)				//在敌人位置处播放敌人的攻击音效

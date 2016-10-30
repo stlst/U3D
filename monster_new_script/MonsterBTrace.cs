@@ -5,6 +5,7 @@ public class MonsterBTrace : MonoBehaviour {
 	public GameObject target;		//敌人的追踪目标
 	public float moveSpeed=8.0f;	//敌人的移动速度
 	public float minDist=2.2f;		//追踪距离，当敌人与目标的距离小于等于该值时，敌人不再追踪目标
+	public AudioClip traceClip;
 
 	private float dist;				
 	private Animator animator;				//敌人的Animator组件
