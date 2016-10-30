@@ -28,19 +28,21 @@ public class MonsterBTrace : MonoBehaviour {
 		}
 		dist = Vector3.Distance (transform.position, target.transform.position);	//计算敌人与追踪目标之间的距离
 		//当游戏状态为游戏进行中（Playing）时
-		if (GameManager.gameManager==null || GameManager.gameManager.gameState == GameManager.GameState.Playing) {			
-			if (dist > minDist && dist < TraceRange) {	//当敌人与目标的距离大于追踪距离时
-				transform.LookAt (target.transform);				//敌人面向追踪目标
-				transform.eulerAngles=new Vector3(0.0f,transform.eulerAngles.y,0.0f);	//设置敌人的Rotation属性，确保敌人只在y轴旋转
-				transform.position += 
+		if (GameManager.gameManager != null && GameManager.gameManager.gameState == GameManager.GameState.Playing) {	
+			if (GameManager.gameManager.player.WeaponState != 4 && GameManager.gameManager.player.heroList [1] != true) {			
+				if (dist > minDist && dist < TraceRange) {	//当敌人与目标的距离大于追踪距离时
+					transform.LookAt (target.transform);				//敌人面向追踪目标
+					transform.eulerAngles = new Vector3 (0.0f, transform.eulerAngles.y, 0.0f);	//设置敌人的Rotation属性，确保敌人只在y轴旋转
+					transform.position += 
 					transform.forward * moveSpeed * Time.deltaTime;	//敌人以moveSpeed的速度向追踪目标靠
-				animator.SetBool("isWalk", true);
+					animator.SetBool ("isWalk", true);
 
+				}
 			}
-
-			if (dist >= TraceRange) {
+			if (dist >= TraceRange || GameManager.gameManager.player.WeaponState == 4 || GameManager.gameManager.player.heroList [1] == true) {
 				animator.SetBool ("isWalk", false);
 			}
+
 		}
 	}
 }

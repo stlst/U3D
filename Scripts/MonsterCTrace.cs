@@ -2,7 +2,6 @@
 using System.Collections;
 
 public class MonsterCTrace : MonoBehaviour {
-
 	public GameObject target;		//敌人的追踪目标
 	public float moveSpeed=8.0f;	//敌人的移动速度
 	public float minDist=2.2f;		//追踪距离，当敌人与目标的距离小于等于该值时，敌人不再追踪目标
@@ -29,17 +28,18 @@ public class MonsterCTrace : MonoBehaviour {
 		}
 		dist = Vector3.Distance (transform.position, target.transform.position);	//计算敌人与追踪目标之间的距离
 		//当游戏状态为游戏进行中（Playing）时
-		if (GameManager.gameManager==null || GameManager.gameManager.gameState == GameManager.GameState.Playing) {			
-			if (dist > minDist && dist < TraceRange) {	//当敌人与目标的距离大于追踪距离时
-				transform.LookAt (target.transform);				//敌人面向追踪目标
-				transform.eulerAngles=new Vector3(0.0f,transform.eulerAngles.y,0.0f);	//设置敌人的Rotation属性，确保敌人只在y轴旋转
-				transform.position += 
+		if (GameManager.gameManager !=null && GameManager.gameManager.gameState == GameManager.GameState.Playing  ) {	
+			if (GameManager.gameManager.player.WeaponState != 7 && GameManager.gameManager.player.heroList [2] != true) {		
+				if (dist > minDist && dist < TraceRange) {	//当敌人与目标的距离大于追踪距离时
+					transform.LookAt (target.transform);				//敌人面向追踪目标
+					transform.eulerAngles = new Vector3 (0.0f, transform.eulerAngles.y, 0.0f);	//设置敌人的Rotation属性，确保敌人只在y轴旋转
+					transform.position += 
 					transform.forward * moveSpeed * Time.deltaTime;	//敌人以moveSpeed的速度向追踪目标靠
-				animator.SetBool("isWalk", true);
+					animator.SetBool ("isWalk", true);
 
+				}
 			}
-
-			if (dist >= TraceRange) {
+			if (dist >= TraceRange || GameManager.gameManager.player.WeaponState == 7 || GameManager.gameManager.player.heroList [2] == true) {
 				animator.SetBool ("isWalk", false);
 			}
 		}

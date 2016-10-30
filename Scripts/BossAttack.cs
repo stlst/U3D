@@ -27,7 +27,7 @@ public class BossAttack : MonoBehaviour {
 			//当游戏状态为游戏进行中（Playing）时
 			if(GameManager.gameManager==null || GameManager.gameManager.gameState==GameManager.GameState.Playing){
 				timer=0.0f;			//攻击后将攻击时间间隔清零
-				animator.SetBool("attack", true);
+				animator.SetTrigger("attack");
 				animator.SetBool ("isWalk", false);
 
 				if(enemyAttackAudio!=null)				//在敌人位置处播放敌人的攻击音效
@@ -36,15 +36,6 @@ public class BossAttack : MonoBehaviour {
 					GameManager.gameManager.player.takeDamage(damage);//通过GameManager游戏管理类实现玩家扣血的效果
 				}
 			}
-		}
-	}
-
-	//与勾选了isTrigger属性的COllider组件共同用于检测：是否有物体离开敌人的攻击范围
-	void OnTriggerExit(Collider collider){
-		//若离开敌人攻击范围的物体标签是玩家时
-		if (collider.gameObject.tag == "Player"){
-			animator.SetBool ("attack", false);	//设置动画参数，将isAttack布尔型参数设置为false，停止播放敌人攻击动画
-			animator.SetBool ("isWalk", true);
 		}
 	}
 

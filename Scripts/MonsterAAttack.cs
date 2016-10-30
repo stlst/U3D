@@ -4,7 +4,7 @@ using System.Collections;
 public class MonsterAAttack : MonoBehaviour {
 
 	public int damage=1;					//敌人攻击造成的伤害值
-	public float timeBetweenAttack=0.8f;	//敌人攻击之间的最小间隔（敌人攻击动画约为0.8秒，为了使得动画正常播放，该值最好设为0.8秒）
+	public float timeBetweenAttack=5.0f;	//敌人攻击之间的最小间隔（敌人攻击动画约为0.8秒，为了使得动画正常播放，该值最好设为0.8秒）
 	public AudioClip enemyAttackAudio;		//敌人的攻击音效
 
 	private float timer;				//攻击时间间隔，记录敌人从上次攻击到现在经过的时间
@@ -20,15 +20,20 @@ public class MonsterAAttack : MonoBehaviour {
 
 	//与勾选了isTrigger属性的COllider组件共同用于检测：是否有物体进入敌人的攻击范围
 	void OnTriggerStay(Collider collider1){
+//		Debug.Log("monster can attack");
 		if (monsterAHealth.health <= 0) 	//若敌人生命值小于等于0，则说明敌人已经死亡，不具备攻击能力
 			return;
 		//当攻击间隔大于敌人攻击之间的最小间隔，且进入敌人攻击范围的对象标签是玩家时
 		if (timer>=timeBetweenAttack && collider1.gameObject.tag == "Player") {
+			Debug.Log ("time:" + timer);
 			//当游戏状态为游戏进行中（Playing）时
-			if(GameManager.gameManager==null || GameManager.gameManager.gameState==GameManager.GameState.Playing){
+			if(GameManager.gameManager!=null && GameManager.gameManager.gameState==GameManager.GameState.Playing
+				&& GameManager.gameManager.player.WeaponState != 2 && GameManager.gameManager.player.heroList [0] != true){
 				timer=0.0f;			//攻击后将攻击时间间隔清零
-				animator.SetBool("attack", true);
+				Debug.Log("monster is attacking");
 				animator.SetBool ("isWalk", false);
+				animator.SetTrigger("attack");
+
 
 				if(enemyAttackAudio!=null)				//在敌人位置处播放敌人的攻击音效
 					AudioSource.PlayClipAtPoint(enemyAttackAudio,transform.position);
@@ -36,15 +41,17 @@ public class MonsterAAttack : MonoBehaviour {
 					GameManager.gameManager.player.takeDamage (damage);//通过GameManager游戏管理类实现玩家扣血的效果
 				}
 			}
+
 		}
+	//	animator.SetBool("attack", false);
 	}
 
 	//与勾选了isTrigger属性的COllider组件共同用于检测：是否有物体离开敌人的攻击范围
 	void OnTriggerExit(Collider collider1){
 		//若离开敌人攻击范围的物体标签是玩家时
 		if (collider1.gameObject.tag == "Player"){
-			animator.SetBool ("attack", false);	//设置动画参数，将isAttack布尔型参数设置为false，停止播放敌人攻击动画
-			animator.SetBool ("isWalk", true);
+		//	animator.SetBool ("attack", false);	//设置动画参数，将isAttack布尔型参数设置为false，停止播放敌人攻击动画
+		//	animator.SetBool ("isWalk", true);
 		}
 	}
 
