@@ -24,7 +24,7 @@ public class ZombieAttack : MonoBehaviour {
 		//当攻击间隔大于敌人攻击之间的最小间隔，且进入敌人攻击范围的对象标签是玩家时
 		if (timer>=timeBetweenAttack && collider1.gameObject.tag == "Player") {
 			//当游戏状态为游戏进行中（Playing）时
-			if(GameManager.gameManager==null || GameManager.gameManager.gameState==GameManager.GameState.Playing){
+			if(GameManager.gameManager !=null && GameManager.gameManager.gameState == GameManager.GameState.Playing ){
 				timer=0.0f;			//攻击后将攻击时间间隔清零
 				animator.SetTrigger("attack");
 				animator.SetBool ("isWalk", false);

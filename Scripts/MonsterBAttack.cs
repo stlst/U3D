@@ -4,7 +4,7 @@ using System.Collections;
 public class MonsterBAttack : MonoBehaviour {
 
 	public int damage=1;					//敌人攻击造成的伤害值
-	public float timeBetweenAttack=0.8f;	//敌人攻击之间的最小间隔（敌人攻击动画约为0.8秒，为了使得动画正常播放，该值最好设为0.8秒）
+	public float timeBetweenAttack=5f;	//敌人攻击之间的最小间隔（敌人攻击动画约为0.8秒，为了使得动画正常播放，该值最好设为0.8秒）
 	public AudioClip enemyAttackAudio;		//敌人的攻击音效
 
 	private float timer;				//攻击时间间隔，记录敌人从上次攻击到现在经过的时间
@@ -28,8 +28,8 @@ public class MonsterBAttack : MonoBehaviour {
 			if(GameManager.gameManager!=null && GameManager.gameManager.gameState==GameManager.GameState.Playing
 				&& GameManager.gameManager.player.WeaponState != 4 && GameManager.gameManager.player.heroList [1] != true){
 				timer=0.0f;			//攻击后将攻击时间间隔清零
-				animator.SetBool("attack", true);
 				animator.SetBool ("isWalk", false);
+				animator.SetTrigger("attack");
 
 				if(enemyAttackAudio!=null)				//在敌人位置处播放敌人的攻击音效
 					AudioSource.PlayClipAtPoint(enemyAttackAudio,transform.position);
@@ -44,8 +44,8 @@ public class MonsterBAttack : MonoBehaviour {
 	void OnTriggerExit(Collider collider1){
 		//若离开敌人攻击范围的物体标签是玩家时
 		if (collider1.gameObject.tag == "Player"){
-			animator.SetBool ("attack", false);	//设置动画参数，将isAttack布尔型参数设置为false，停止播放敌人攻击动画
-			animator.SetBool ("isWalk", true);
+	//		animator.SetBool ("attack", false);	//设置动画参数，将isAttack布尔型参数设置为false，停止播放敌人攻击动画
+	//		animator.SetBool ("isWalk", true);
 		}
 	}
 
